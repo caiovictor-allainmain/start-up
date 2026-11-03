@@ -3,15 +3,22 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import Navbar from "../components/Navbar/Navbar"
 import Sidebar from "../components/Sidebar/Sidebar"
 
-import useAuth from "../hooks/useAuth"
-
 import "./MainLayout.css"
 
 function MainLayout() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const { user } = useAuth()
+  function handleSearch(value) {
+    const search = value
+      ? `?${new URLSearchParams({ search: value }).toString()}`
+      : ""
+
+    navigate({
+      pathname: "/explore",
+      search
+    })
+  }
 
   function handleNavigate(page) {
     const routes = {
@@ -73,12 +80,7 @@ function MainLayout() {
   return (
     <div className="main-layout">
 
-      <Navbar
-        user={user?.name || "Usuário"}
-        onSearch={(value) => {
-          console.log("Pesquisar:", value)
-        }}
-      />
+      <Navbar onSearch={handleSearch} />
 
       <div className="main-layout-body">
 

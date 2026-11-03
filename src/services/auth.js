@@ -157,6 +157,26 @@ export async function updateCurrentUser(userData) {
     return data.user
 }
 
+export async function deleteCurrentUser() {
+    if (typeof supabase.rpc !== "function") {
+        const { error } = await supabase.auth.deleteUser()
+
+        if (error) {
+            console.error("Erro ao excluir conta de demonstração:", error)
+            throw error
+        }
+
+        return
+    }
+
+    const { error } = await supabase.rpc("delete_current_user")
+
+    if (error) {
+        console.error("Erro ao excluir conta:", error)
+        throw error
+    }
+}
+
 
 // =========================
 // BUSCAR PERFIL
@@ -174,4 +194,3 @@ export async function getProfile() {
 
     return user
 }
-

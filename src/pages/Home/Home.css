@@ -1,6 +1,6 @@
 .home {
-    min-height: 100vh;
-    background: #f8fafc;
+    min-height: 100%;
+    background: var(--bg, #f8fafc);
 }
 
 .home-layout {

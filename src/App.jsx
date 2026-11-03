@@ -21,6 +21,7 @@ import Explore from "./pages/Explore/Explore.jsx"
 import Profile from "./pages/Profile/Profile.jsx"
 import Startup from "./pages/Startup/Startup.jsx"
 import CreateStartup from "./pages/CreateStartup/CreateStartup.jsx"
+import StartupDetails from "./pages/CreateStartup/StartupDetails.jsx"
 import Communities from "./pages/Communities/Communities.jsx"
 import Messages from "./pages/Messages/Messages.jsx"
 import Dashboard from "./pages/Dashboard/Dashboard.jsx"
@@ -102,7 +103,7 @@ function App() {
 
     return (
 
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL}>
 
             <AuthProvider>
 
@@ -170,6 +171,11 @@ function App() {
                         <Route
                             path="/startup/:id"
                             element={<Startup />}
+                        />
+
+                        <Route
+                            path="/startups/:id/details"
+                            element={<StartupDetails />}
                         />
 
                         <Route

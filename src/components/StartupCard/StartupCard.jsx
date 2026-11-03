@@ -1,14 +1,33 @@
+import { useNavigate } from "react-router-dom"
+
 import "./StartupCard.css"
 
 function StartupCard({
+    id,
     name = "Minha Startup",
     description = "Descrição da startup",
     category = "Tecnologia",
     stage = "Ideia",
     members = 1,
     likes = 0,
+    showStats = true,
     onClick
 }) {
+    const navigate = useNavigate()
+
+    function handleViewStartup() {
+        if (onClick) {
+            onClick()
+            return
+        }
+
+        if (id !== undefined && id !== null) {
+            navigate(`/startup/${encodeURIComponent(id)}`)
+            return
+        }
+
+        navigate(`/explore?${new URLSearchParams({ search: name }).toString()}`)
+    }
 
     return (
         <article className="startup-card">
@@ -43,21 +62,16 @@ function StartupCard({
                 </strong>
             </div>
 
-            <div className="startup-stats">
-
-                <span>
-                    👥 {members} membros
-                </span>
-
-                <span>
-                    ❤️ {likes}
-                </span>
-
-            </div>
+            {showStats && (
+                <div className="startup-stats">
+                    <span>👥 {members} membros</span>
+                    <span>❤️ {likes}</span>
+                </div>
+            )}
 
             <button
                 className="startup-card-button"
-                onClick={onClick}
+                onClick={handleViewStartup}
             >
                 Ver startup →
             </button>

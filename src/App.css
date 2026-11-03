@@ -191,3 +191,177 @@ body {
     transform: translateY(-2px);
   }
 }
+
+/* Shared dark-theme defaults for page surfaces and form controls. */
+body.escuro .main-layout-content {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.escuro .main-layout-content > div {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+body.escuro .main-layout-content [class$="-card"]:not(button),
+body.escuro .main-layout-content [class$="-box"]:not(button),
+body.escuro .main-layout-content [class$="-panel"]:not(button),
+body.escuro .main-layout-content [class$="-widget"]:not(button),
+body.escuro .main-layout-content [class$="-list"]:not(button) {
+  background-color: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+body.escuro .main-layout-content h1,
+body.escuro .main-layout-content h2,
+body.escuro .main-layout-content h3,
+body.escuro .main-layout-content h4 {
+  color: var(--text);
+}
+
+body.escuro .main-layout-content p,
+body.escuro .main-layout-content li,
+body.escuro .main-layout-content label {
+  color: var(--text-secondary);
+}
+
+body.escuro .main-layout-content strong {
+  color: var(--text);
+}
+
+body.escuro .main-layout-content input,
+body.escuro .main-layout-content textarea,
+body.escuro .main-layout-content select {
+  color-scheme: dark;
+}
+
+body.escuro .main-layout-content input:not([type="checkbox"]):not([type="radio"]),
+body.escuro .main-layout-content textarea,
+body.escuro .main-layout-content select {
+  border-color: var(--border);
+  background-color: var(--surface-secondary);
+  color: var(--text);
+}
+
+body.escuro .main-layout-content input::placeholder,
+body.escuro .main-layout-content textarea::placeholder {
+  color: var(--text-secondary);
+}
+
+body.escuro .main-layout-content input:focus-visible,
+body.escuro .main-layout-content textarea:focus-visible,
+body.escuro .main-layout-content select:focus-visible {
+  outline-color: #60a5fa;
+}
+
+body.escuro .main-layout-content .profile-header,
+body.escuro .main-layout-content .startup-form,
+body.escuro .main-layout-content .community-card {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+body.escuro .main-layout-content .startup-summary,
+body.escuro .main-layout-content .community-icon {
+  background: var(--surface-secondary);
+  color: var(--text);
+}
+
+body.escuro .main-layout-content .create-header p,
+body.escuro .main-layout-content .startup-form label,
+body.escuro .main-layout-content .community-card p,
+body.escuro .main-layout-content .community-card > span,
+body.escuro .main-layout-content .home-welcome h1,
+body.escuro .main-layout-content .home-welcome p,
+body.escuro .main-layout-content .post-author span,
+body.escuro .main-layout-content .post-startup span,
+body.escuro .main-layout-content .post-actions button {
+  color: var(--text-secondary);
+}
+
+body.escuro .main-layout-content .startup-summary p,
+body.escuro .main-layout-content .post-content {
+  color: var(--text);
+}
+
+body.escuro .main-layout-content .progress-step {
+  background: #303541;
+  color: var(--text-secondary);
+}
+
+body.escuro .main-layout-content .progress-step.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+body.escuro .login-page,
+body.escuro .register-page,
+body.escuro .auth-layout {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.escuro .login-container,
+body.escuro .register-container {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+body.escuro .login-container h1,
+body.escuro .register-container h1,
+body.escuro .login-container form > label,
+body.escuro .login-field label,
+body.escuro .register-container label {
+  color: var(--text);
+}
+
+body.escuro .login-container > p,
+body.escuro .register-container > p {
+  color: var(--text-secondary);
+}
+
+body.escuro .login-container input,
+body.escuro .register-container input {
+  border-color: var(--border);
+  background: var(--surface-secondary);
+  color: var(--text);
+  color-scheme: dark;
+}
+
+body.escuro .login-container input::placeholder,
+body.escuro .register-container input::placeholder {
+  color: var(--text-secondary);
+}
+
+body.escuro .app-loading {
+  background: var(--bg);
+  color: var(--text);
+}
+
+body.escuro .app-loading span {
+  color: var(--text);
+}
+
+body.escuro ::placeholder {
+  color: var(--text-secondary);
+}
+
+body.escuro .main-layout-content .post-actions button:hover {
+  background: var(--surface-secondary);
+  color: var(--text);
+}
+
+body.escuro .main-layout-content .messages-notice {
+  border-color: #665329;
+  background: #302719;
+  color: #f5d98d;
+}
+
+body.escuro .main-layout-content .messages-error {
+  border-color: #603535;
+  background: #2b191b;
+  color: #fca5a5;
+}

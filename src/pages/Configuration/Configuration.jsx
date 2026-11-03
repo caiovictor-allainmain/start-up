@@ -1,57 +1,122 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+
+import useAuth from "../../hooks/useAuth"
+import { deleteCurrentUser, updateCurrentUser } from "../../services/auth"
+import { supabase } from "../../services/supabase"
+import getUserDisplayName from "../../utils/getUserDisplayName"
+import { applyTheme, loadSavedSettings, saveSettings } from "../../utils/theme"
 
 import "./Configuration.css"
 
 export default function Configuration() {
+  const { user, setUser } = useAuth()
+  const navigate = useNavigate()
   const [activeSection, setActiveSection] = useState("conta")
+  const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
-  const [config, setConfig] = useState({
-    nome: "Eryck",
-    email: "",
-    notificacoes: true,
-    emailNotificacoes: true,
-    perfilPublico: true,
-    statusOnline: true,
-    tema: "claro"
+  const accountName = getUserDisplayName(user)
+
+  const [config, setConfig] = useState(() => {
+    const saved = loadSavedSettings()
+
+    return {
+      nome: accountName,
+      email: user?.email || "",
+      notificacoes: saved.notificacoes ?? true,
+      emailNotificacoes: saved.emailNotificacoes ?? true,
+      perfilPublico: saved.perfilPublico ?? true,
+      statusOnline: saved.statusOnline ?? true,
+      tema: saved.tema === "escuro" ? "escuro" : "claro"
+    }
   })
 
-  // Carregar configurações salvas
-  useEffect(() => {
-    const saved = localStorage.getItem("configuracoes")
-
-    if (saved) {
-      setConfig(JSON.parse(saved))
-    }
-  }, [])
-
-  // Aplicar o tema global
-  useEffect(() => {
-    document.body.classList.toggle(
-      "escuro",
-      config.tema === "escuro"
-    )
-  }, [config.tema])
-
   function updateConfig(campo, valor) {
+    if (campo === "tema") {
+      applyTheme(valor)
+      if (!saveSettings({
+        ...config,
+        tema: valor
+      })) {
+        alert("O tema foi aplicado, mas não foi possível salvá-lo neste dispositivo.")
+      }
+    }
+
     setConfig((prev) => ({
       ...prev,
       [campo]: valor
     }))
   }
 
-  function saveConfig() {
-    localStorage.setItem(
-      "configuracoes",
-      JSON.stringify(config)
+  async function saveConfig() {
+    if (!config.nome.trim()) {
+      alert("Informe o nome da conta antes de salvar.")
+      return
+    }
+
+    setSaving(true)
+
+    try {
+      const updatedUser = await updateCurrentUser({
+        name: config.nome.trim()
+      })
+
+      setUser(updatedUser)
+      if (!saveSettings({
+        ...config,
+        nome: config.nome.trim(),
+        email: user?.email || ""
+      })) {
+        throw new Error("Não foi possível salvar as configurações localmente.")
+      }
+
+      alert("Configurações salvas com sucesso! ✅")
+    } catch (error) {
+      console.error("Erro ao salvar configurações:", error)
+      alert("Não foi possível salvar as configurações.")
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  async function handleDeleteAccount() {
+    const confirmed = window.confirm(
+      "Tem certeza de que deseja excluir sua conta? Essa ação é permanente e não pode ser desfeita."
     )
 
-    alert("Configurações salvas com sucesso! ✅")
+    if (!confirmed) {
+      return
+    }
+
+    setDeleting(true)
+
+    try {
+      await deleteCurrentUser()
+      setUser(null)
+
+      const { error } = await supabase.auth.signOut({
+        scope: "local"
+      })
+
+      if (error) {
+        console.error("Conta excluída, mas não foi possível limpar a sessão local:", error)
+        alert("Conta excluída. Recarregue a página para encerrar esta sessão.")
+      }
+
+      navigate("/login", { replace: true })
+    } catch (error) {
+      console.error("Erro ao excluir conta:", error)
+      alert(error.message || "Não foi possível excluir a conta.")
+    } finally {
+      setDeleting(false)
+    }
   }
 
   function resetConfig() {
     const defaultConfig = {
-      nome: "Eryck",
-      email: "",
+      nome: accountName,
+      email: user?.email || "",
       notificacoes: true,
       emailNotificacoes: true,
       perfilPublico: true,
@@ -60,11 +125,10 @@ export default function Configuration() {
     }
 
     setConfig(defaultConfig)
-
-    localStorage.setItem(
-      "configuracoes",
-      JSON.stringify(defaultConfig)
-    )
+    applyTheme(defaultConfig.tema)
+    if (!saveSettings(defaultConfig)) {
+      alert("Não foi possível salvar as configurações restauradas.")
+    }
   }
 
   const sections = [
@@ -236,7 +300,7 @@ export default function Configuration() {
                 <div className="field">
 
                   <label>
-                    Nome de usuário
+                    Nome completo
                   </label>
 
                   <input
@@ -261,14 +325,9 @@ export default function Configuration() {
 
                   <input
                     type="email"
-                    value={config.email}
+                    value={user?.email || config.email}
                     placeholder="seuemail@email.com"
-                    onChange={(e) =>
-                      updateConfig(
-                        "email",
-                        e.target.value
-                      )
-                    }
+                    readOnly
                   />
 
                 </div>
@@ -545,8 +604,9 @@ export default function Configuration() {
             <button
               className="save-button"
               onClick={saveConfig}
+              disabled={saving}
             >
-              ✓ Salvar alterações
+              {saving ? "Salvando..." : "✓ Salvar alterações"}
             </button>
 
           </div>
@@ -571,8 +631,12 @@ export default function Configuration() {
 
             </div>
 
-            <button className="delete-button">
-              Excluir conta
+            <button
+              className="delete-button"
+              onClick={handleDeleteAccount}
+              disabled={deleting}
+            >
+              {deleting ? "Excluindo..." : "Excluir conta"}
             </button>
 
           </div>

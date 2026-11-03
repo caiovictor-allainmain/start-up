@@ -22,19 +22,12 @@ async function request(endpoint, options = {}) {
     // =========================
 
     const config = {
-
+        ...options,
         method: options.method || "GET",
-
         headers: {
-
             "Content-Type": "application/json",
-
-            ...(options.headers || {})
-
-        },
-
-        ...options
-
+            ...options.headers
+        }
     }
 
 

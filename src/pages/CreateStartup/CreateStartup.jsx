@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 import { useNavigate } from "react-router-dom"
 
@@ -8,6 +8,7 @@ import Button from "../../components/Button/Button"
 import useAuth from "../../hooks/useAuth"
 
 import { supabase } from "../../services/supabase"
+import { validateStartup } from "../../utils/validation"
 
 import "./CreateStartup.css"
 
@@ -155,6 +156,8 @@ function CreateStartup() {
     const [step, setStep] = useState(1)
 
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
+    const formRef = useRef(null)
 
 
     const [startup, setStartup] = useState({
@@ -191,14 +194,30 @@ function CreateStartup() {
             [name]: value
 
         }))
-
+        setError("")
     }
 
-
     function nextStep() {
+        if (!formRef.current?.reportValidity()) {
+            return
+        }
+
+        const requiredFieldsByStep = {
+            1: ["name", "category"],
+            2: ["problem", "audience"],
+            3: ["solution", "businessModel"]
+        }
+        const missingField = requiredFieldsByStep[step].some(
+            (field) => !String(startup[field] || "").trim()
+        )
+
+        if (missingField) {
+            setError("Preencha os campos obrigatórios desta etapa.")
+            return
+        }
 
         if (step < 4) {
-
+            setError("")
             setStep(
                 previous => previous + 1
             )
@@ -225,10 +244,22 @@ function CreateStartup() {
 
         event.preventDefault()
 
+        const validation = validateStartup(startup)
+        if (!validation.valid) {
+            setError(Object.values(validation.errors).join(" "))
+            return
+        }
 
-    if (authLoading) {
-        return
-    }
+        setError("")
+
+        if (authLoading) {
+            return
+        }
+
+        if (typeof supabase.rpc !== "function") {
+            setError("Conecte o Supabase para cadastrar startups.")
+            return
+        }
 
         if (!user) {
 
@@ -247,120 +278,41 @@ function CreateStartup() {
 
             setLoading(true)
 
-
-            console.log(
-                "Usuário autenticado:",
-                user
-            )
-
-            console.log(
-                "UUID do usuário:",
-                user.id
-            )
-
-
-            const {
-
-                data: newStartup,
-
-                error: startupError
-
-            } = await supabase
-
-                .from("startups")
-
-                .insert({
-
-                    user_id: user.id,
-
-                    name: startup.name,
-
-                    category: startup.category,
-
-                    problem: startup.problem,
-
-                    audience: startup.audience,
-
-                    solution: startup.solution,
-
-                    business_model:
-                        startup.businessModel,
-
-                    stage: startup.stage
-
-                })
-
-                .select()
-
-                .single()
-
-
-            if (startupError) {
-
-                console.error(
-                    "Erro ao inserir startup:",
-                    startupError
-                )
-
-                throw startupError
-
-            }
-
-
-
             const goals =
                 stageGoals[startup.stage] || []
 
+            const { data: startupId, error: startupError } = await supabase.rpc(
+                "create_startup_with_goals",
+                {
+                    startup_data: {
+                        name: startup.name,
+                        category: startup.category,
+                        problem: startup.problem,
+                        audience: startup.audience,
+                        solution: startup.solution,
+                        business_model: startup.businessModel,
+                        stage: startup.stage
+                    },
+                    goals_data: goals
+                }
+            )
 
-            if (goals.length > 0) {
-
-                const goalsToInsert =
-                    goals.map(goal => ({
-
-                        startup_id:
-                            newStartup.id,
-
-                        title:
-                            goal.title,
-
-                        description:
-                            goal.description,
-
-                        stage:
-                            startup.stage,
-
-                        completed:
-                            false
-
-                    }))
-
-
-                const {
-
-                    error: goalsError
-
-                } = await supabase
-
-                    .from("startup_goals")
-
-                    .insert(
-                        goalsToInsert
+            if (startupError) {
+                if (
+                    startupError.code === "PGRST202" ||
+                    startupError.message?.includes("create_startup_with_goals")
+                ) {
+                    throw new Error(
+                        "A função do banco ainda não existe. Execute a migration 20261026093000_startups_and_goals.sql no SQL Editor do Supabase."
                     )
-
-
-                if (goalsError) {
-
-                    console.error(
-                        "Erro ao criar metas:",
-                        goalsError
-                    )
-
-                    throw goalsError
-
                 }
 
+                throw startupError
             }
 
+            if (!startupId) {
+                throw new Error("O banco não retornou o ID da startup criada.")
+            }
 
             // =========================
             // SUCESSO
@@ -371,9 +323,7 @@ function CreateStartup() {
             )
 
 
-            navigate(
-                `/startups/${newStartup.id}`
-            )
+            navigate(`/startup/${startupId}`)
 
 
         } catch (error) {
@@ -384,13 +334,9 @@ function CreateStartup() {
             )
 
 
-            alert(
-
-                `❌ Erro ao criar startup:\n${
-                    error.message ||
-                    "Tente novamente."
-                }`
-
+            setError(
+                error.message ||
+                "Não foi possível criar a startup. Tente novamente."
             )
 
         } finally {
@@ -443,9 +389,16 @@ function CreateStartup() {
 
 
             <form
+                ref={formRef}
                 className="startup-form"
                 onSubmit={handleSubmit}
             >
+
+                {error && (
+                    <div className="login-message login-error" role="alert">
+                        {error}
+                    </div>
+                )}
 
                 {step === 1 && (
 
@@ -804,4 +757,3 @@ function CreateStartup() {
 
 
 export default CreateStartup
-

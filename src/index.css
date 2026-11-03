@@ -20,8 +20,9 @@ body,
 body {
     margin: 0;
 
-    background: #f8fafc;
-    color: #111827;
+    background: var(--bg, #f8fafc);
+    color: var(--text, #111827);
+    line-height: 1.5;
 
     font-family:
         Inter,
@@ -76,6 +77,11 @@ p {
     margin-top: 0;
 }
 
+p,
+li {
+    text-wrap: pretty;
+}
+
 /* =========================
    SELEÇÃO
 ========================= */
@@ -95,7 +101,7 @@ p {
 }
 
 ::-webkit-scrollbar-track {
-    background: #f8fafc;
+    background: var(--bg, #f8fafc);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -137,4 +143,3 @@ p {
         font-size: 14px;
     }
 }
-

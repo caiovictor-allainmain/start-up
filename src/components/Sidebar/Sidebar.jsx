@@ -1,6 +1,11 @@
+import { useState } from "react"
+
+import Modal from "../Modal/Modal"
 import "./Sidebar.css"
 
 export default function Sidebar({ activePage = "home", onNavigate }) {
+  const [helpOpen, setHelpOpen] = useState(false)
+
   const menuItems = [
     {
       id: "home",
@@ -87,7 +92,7 @@ export default function Sidebar({ activePage = "home", onNavigate }) {
 
         <button
           className="sidebar-item"
-          onClick={() => onNavigate?.("help")}
+          onClick={() => setHelpOpen(true)}
         >
           <span className="sidebar-icon">
             ❓
@@ -97,6 +102,33 @@ export default function Sidebar({ activePage = "home", onNavigate }) {
         </button>
 
       </div>
+
+      <Modal
+        isOpen={helpOpen}
+        onClose={() => setHelpOpen(false)}
+        title="Central de ajuda"
+        size="small"
+      >
+        <div className="help-content">
+          <p>
+            Encontre rapidamente os principais recursos da plataforma:
+          </p>
+          <ul>
+            <li><strong>Criar Startup:</strong> registre uma ideia e acompanhe seu desenvolvimento.</li>
+            <li><strong>Dashboard:</strong> veja um resumo da sua atividade.</li>
+            <li><strong>Configurações:</strong> personalize sua conta e escolha o tema.</li>
+          </ul>
+          <button
+            className="help-settings-button"
+            onClick={() => {
+              setHelpOpen(false)
+              onNavigate?.("configuration")
+            }}
+          >
+            Abrir configurações
+          </button>
+        </div>
+      </Modal>
 
     </aside>
   )

@@ -60,6 +60,7 @@ function Modal({
                     <button
                         className="modal-close"
                         onClick={onClose}
+                        aria-label="Fechar janela"
                     >
                         ×
                     </button>

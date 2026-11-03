@@ -34,19 +34,11 @@ function Communities() {
     ]
 
     function toggleCommunity(name) {
-
-        if (joined.includes(name)) {
-            setJoined(
-                joined.filter(
-                    community => community !== name
-                )
-            )
-        } else {
-            setJoined([
-                ...joined,
-                name
-            ])
-        }
+        setJoined((current) =>
+            current.includes(name)
+                ? current.filter((community) => community !== name)
+                : [...current, name]
+        )
     }
 
     return (

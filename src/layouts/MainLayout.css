@@ -1,7 +1,7 @@
 .main-layout {
     min-height: 100vh;
-    background: #f8fafc;
-    color: #111827;
+    background: var(--bg, #f8fafc);
+    color: var(--text, #111827);
 }
 
 /* =========================

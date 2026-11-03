@@ -1,14 +1,14 @@
 .config-page {
-  min-height: 100vh;
+  min-height: 100%;
   padding: 35px;
-  background: #f5f7fb;
-  color: #171923;
-  transition: 0.3s;
+  background: var(--bg, #f5f7fb);
+  color: var(--text, #171923);
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.config-page.escuro {
-  background: #0f1117;
-  color: #f3f4f6;
+body.escuro .config-page {
+  background: var(--bg);
+  color: var(--text);
 }
 
 .config-top {
@@ -97,6 +97,11 @@
 
 .profile-mini strong {
   font-size: 14px;
+}
+
+.escuro .profile-mini strong,
+.escuro .user-preview h3 {
+  color: #f3f4f6;
 }
 
 .profile-mini span {
@@ -346,6 +351,11 @@
   color: #fff;
 }
 
+.field input:read-only {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
 .settings-list {
   display: flex;
   flex-direction: column;
@@ -439,9 +449,24 @@
   box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.08);
 }
 
+.escuro .theme-option {
+  border-color: #303541;
+  background: #1b1f28;
+}
+
+.escuro .theme-option:has(input:checked) {
+  border-color: #8b80f2;
+  box-shadow: 0 0 0 3px rgba(139, 128, 242, 0.12);
+}
+
 .theme-option input {
   position: absolute;
   opacity: 0;
+}
+
+.theme-option input:focus-visible + .theme-preview {
+  outline: 2px solid #6c5ce7;
+  outline-offset: 3px;
 }
 
 .theme-preview {
@@ -479,10 +504,18 @@
   font-size: 14px;
 }
 
+.escuro .theme-option strong {
+  color: #f3f4f6;
+}
+
 .theme-option span {
   color: #858b96;
   font-size: 11px;
   line-height: 1.4;
+}
+
+.escuro .theme-option span {
+  color: #a4aab5;
 }
 
 .security-item {
@@ -538,6 +571,10 @@
   background: #fff7e8;
 }
 
+.escuro .security-warning {
+  background: #302719;
+}
+
 .security-warning strong {
   color: #7b5c19;
   font-size: 13px;
@@ -570,6 +607,24 @@
 
 .save-button:hover {
   transform: translateY(-1px);
+}
+
+.save-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+  transform: none;
+}
+
+.secondary-button:hover,
+.reset-button:hover {
+  border-color: #9ca3af;
+  color: var(--text, #171923);
+}
+
+.escuro .secondary-button:hover,
+.escuro .reset-button:hover {
+  border-color: #596273;
+  color: #f3f4f6;
 }
 
 .danger-zone {
@@ -620,6 +675,11 @@
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.delete-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
 }
 
 @media (max-width: 900px) {

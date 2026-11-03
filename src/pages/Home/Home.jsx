@@ -1,72 +1,37 @@
-import { useState } from "react"
-
 import Post from "../../components/Post/Post"
 import StartupCard from "../../components/StartupCard/StartupCard"
 import UserCard from "../../components/UserCard/UserCard"
+
+import useAuth from "../../hooks/useAuth"
+import getUserDisplayName from "../../utils/getUserDisplayName"
+import { currentUser, posts as mockPosts, startups as mockStartups, users as mockUsers } from "../../data/mockData"
 
 import "./Home.css"
 
 function Home() {
 
-    const [search, setSearch] = useState("")
+    const { user } = useAuth()
 
-    const posts = [
-        {
-            author: "Ana Silva",
-            username: "@anasilva",
-            time: "2h",
-            content:
-                "Estou criando uma plataforma para ajudar pequenos negócios a utilizarem inteligência artificial no dia a dia.",
-            likes: 42,
-            comments: 8
-        },
-        {
-            author: "Carlos Oliveira",
-            username: "@carlos",
-            time: "4h",
-            content:
-                "Acabei de lançar o primeiro MVP da minha startup! Agora começa a fase de validação.",
-            likes: 76,
-            comments: 15
-        }
-    ]
+    const displayName = user
+        ? getUserDisplayName(user)
+        : currentUser.name
 
-    const startups = [
-        {
-            name: "IA Fácil",
-            description:
-                "Ferramentas de inteligência artificial para pequenos negócios.",
-            category: "Inteligência Artificial",
-            stage: "MVP",
-            members: 4,
-            likes: 92
-        },
-        {
-            name: "EcoTech",
-            description:
-                "Tecnologia para diminuir desperdícios em empresas.",
-            category: "Sustentabilidade",
-            stage: "Ideia",
-            members: 2,
-            likes: 47
-        }
-    ]
+    const firstName = displayName.split(" ")[0]
+
+    const posts = mockPosts.slice(0, 2)
+    const startups = mockStartups.slice(0, 2)
+    const suggestedUsers = mockUsers.slice(0, 2)
 
     return (
         <div className="home">
             <section className="home-welcome">
                 <div>
-                    <h1>Olá, João! 👋</h1>
+                    <h1>Olá, {firstName}! 👋</h1>
                     <p>
                         O que você vai construir hoje?
                     </p>
                 </div>
 
-                {search && (
-                    <span>
-                        Pesquisando por: "{search}"
-                    </span>
-                )}
             </section>
 
             <section className="home-feed">
@@ -79,7 +44,7 @@ function Home() {
 
                     {posts.map((post, index) => (
                         <Post
-                            key={index}
+                            key={post.id || index}
                             {...post}
                         />
                     ))}
@@ -96,7 +61,7 @@ function Home() {
 
                         {startups.map((startup) => (
                             <StartupCard
-                                key={startup.name}
+                                key={startup.id || startup.name}
                                 {...startup}
                             />
                         ))}
@@ -109,16 +74,16 @@ function Home() {
                             👥 Pessoas para conhecer
                         </h3>
 
-                        <UserCard
-                            name="Lucas Santos"
-                            username="@lucasdev"
-                            role="Desenvolvedor Full Stack"
-                            skills={[
-                                "React",
-                                "Node.js"
-                            ]}
-                            followers={320}
-                        />
+                        {suggestedUsers.map((person) => (
+                            <UserCard
+                                key={person.id || person.username}
+                                name={person.name}
+                                username={person.username}
+                                role={person.role}
+                                skills={person.skills}
+                                followers={person.followers}
+                            />
+                        ))}
 
                     </div>
 

@@ -1,21 +1,27 @@
 
+import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router-dom"
+
 import "./Navbar.css"
 
 import useAuth from "../../hooks/useAuth"
+import getUserDisplayName from "../../utils/getUserDisplayName"
 
 function Navbar({ onSearch }) {
-
     const { user } = useAuth()
+    const [searchParams] = useSearchParams()
+    const [search, setSearch] = useState(
+        searchParams.get("search") || ""
+    )
 
-    const username =
-        user?.user_metadata?.username ||
-        user?.user_metadata?.name ||
-        user?.email?.split("@")[0] ||
-        "Usuário"
+    useEffect(() => {
+        setSearch(searchParams.get("search") || "")
+    }, [searchParams])
+
+    const displayName = getUserDisplayName(user)
 
     const avatarLetter =
-        username
-            .replace("@", "")
+        displayName
             .charAt(0)
             .toUpperCase()
 
@@ -37,19 +43,23 @@ function Navbar({ onSearch }) {
             </div>
 
 
-            <div className="navbar-search">
+            <form
+                className="navbar-search"
+                onSubmit={(event) => {
+                    event.preventDefault()
+                    onSearch?.(search.trim())
+                }}
+            >
 
                 <input
                     type="text"
                     placeholder="Pesquisar startups, pessoas ou ideias..."
-                    onChange={(event) =>
-                        onSearch?.(
-                            event.target.value
-                        )
-                    }
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    aria-label="Pesquisar startups, pessoas ou ideias"
                 />
 
-            </div>
+            </form>
 
 
             <div className="navbar-actions">
@@ -83,7 +93,7 @@ function Navbar({ onSearch }) {
 
                     <span>
 
-                        {username}
+                        {displayName}
 
                     </span>
 
@@ -99,4 +109,3 @@ function Navbar({ onSearch }) {
 }
 
 export default Navbar
-

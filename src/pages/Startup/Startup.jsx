@@ -13,6 +13,7 @@ import Button from "../../components/Button/Button"
 
 import useAuth from "../../hooks/useAuth"
 
+import { startups as sampleStartups } from "../../data/mockData"
 import { supabase } from "../../services/supabase"
 
 import "./Startup.css"
@@ -27,101 +28,6 @@ const stages = [
     "Crescimento"
 
 ]
-
-
-const stageGoals = {
-
-    Ideia: [
-        {
-            title: "Definir o problema",
-            description:
-                "Descrever claramente qual problema sua startup resolve."
-        },
-        {
-            title: "Definir o público-alvo",
-            description:
-                "Identificar quem possui esse problema."
-        },
-        {
-            title: "Definir a solução",
-            description:
-                "Explicar como sua startup resolve o problema."
-        }
-    ],
-
-    Validação: [
-        {
-            title: "Conversar com usuários",
-            description:
-                "Entrevistar pessoas que fazem parte do público-alvo."
-        },
-        {
-            title: "Validar o problema",
-            description:
-                "Descobrir se o problema realmente existe e é relevante."
-        },
-        {
-            title: "Validar a solução",
-            description:
-                "Verificar se os usuários demonstram interesse na solução."
-        }
-    ],
-
-    MVP: [
-        {
-            title: "Criar o protótipo",
-            description:
-                "Criar a primeira versão funcional do produto."
-        },
-        {
-            title: "Implementar a funcionalidade principal",
-            description:
-                "Desenvolver aquilo que realmente resolve o problema."
-        },
-        {
-            title: "Testar com usuários",
-            description:
-                "Colocar o MVP nas mãos de usuários reais."
-        }
-    ],
-
-    Lançamento: [
-        {
-            title: "Publicar o produto",
-            description:
-                "Disponibilizar o produto para usuários."
-        },
-        {
-            title: "Conseguir os primeiros usuários",
-            description:
-                "Atrair os primeiros usuários reais."
-        },
-        {
-            title: "Coletar feedback",
-            description:
-                "Registrar problemas, sugestões e necessidades."
-        }
-    ],
-
-    Crescimento: [
-        {
-            title: "Aumentar usuários ativos",
-            description:
-                "Criar estratégias para aumentar a utilização do produto."
-        },
-        {
-            title: "Melhorar retenção",
-            description:
-                "Fazer com que os usuários continuem utilizando o produto."
-        },
-        {
-            title: "Aumentar receita",
-            description:
-                "Criar estratégias para tornar o negócio sustentável."
-        }
-    ]
-
-}
 
 
 function Startup() {
@@ -143,6 +49,9 @@ function Startup() {
 
     const [startup, setStartup] =
         useState(null)
+
+    const [isSampleStartup, setIsSampleStartup] =
+        useState(false)
 
     const [goals, setGoals] =
         useState([])
@@ -227,11 +136,31 @@ function Startup() {
             return
         }
 
+        const sampleStartup = sampleStartups.find(
+            (item) => String(item.id) === id
+        )
+
+        if (sampleStartup) {
+            setStartup({
+                ...sampleStartup,
+                solution: sampleStartup.description,
+                problem: "Esta é uma startup em destaque na comunidade.",
+                audience: "Empreendedores e pessoas interessadas nesta área.",
+                business_model: "Informação não disponível nesta prévia."
+            })
+            setGoals([])
+            setIsSampleStartup(true)
+            setLoading(false)
+            setError("")
+            return
+        }
+
         try {
 
             setLoading(true)
 
             setError("")
+            setIsSampleStartup(false)
 
 
             // --------------------------
@@ -478,9 +407,7 @@ function Startup() {
                                         }}
 
                                         onClick={() =>
-                                            navigate(
-                                                `/startups/${startupItem.id}`
-                                            )
+                                            navigate(`/startup/${startupItem.id}`)
                                         }
                                     >
 
@@ -645,15 +572,19 @@ function Startup() {
                 </div>
 
 
-                <Button
-                    onClick={() =>
-                        navigate(
-                            `/startups/${startup.id}/details`
-                        )
-                    }
-                >
-                    ⚙️ Gerenciar
-                </Button>
+                {isSampleStartup ? (
+                    <Button onClick={() => navigate("/explore")}>
+                        Explorar startups
+                    </Button>
+                ) : (
+                    <Button
+                        onClick={() =>
+                            navigate(`/startups/${startup.id}/details`)
+                        }
+                    >
+                        ⚙️ Gerenciar
+                    </Button>
+                )}
 
 
             </section>
@@ -918,4 +849,3 @@ function Startup() {
 
 
 export default Startup
-

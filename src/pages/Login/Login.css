@@ -74,8 +74,22 @@
     font-weight: 600;
 }
 
+.login-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.login-field label {
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+}
+
 .login-container input[type="email"],
 .login-container input[type="password"] {
+    width: 100%;
+    box-sizing: border-box;
     padding: 12px;
 
     border: 1px solid #d1d5db;
@@ -138,4 +152,53 @@
 
     font-weight: 600;
     text-decoration: none;
+}
+
+.login-remember {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #6b7280;
+}
+
+.login-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid #e5e7eb;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.login-footer a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.login-message {
+    margin-bottom: 16px;
+    padding: 11px 13px;
+    border-radius: 9px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.login-error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+@media (max-width: 600px) {
+    .login-container {
+        padding: 28px 22px;
+    }
+
+    .login-options {
+        align-items: flex-start;
+        gap: 12px;
+    }
 }

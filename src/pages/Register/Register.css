@@ -74,7 +74,19 @@
     font-weight: 600;
 }
 
+.register-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.register-field label {
+    display: block;
+}
+
 .register-container input {
+    width: 100%;
+    box-sizing: border-box;
     padding: 11px;
 
     border: 1px solid #d1d5db;
@@ -109,4 +121,47 @@
 
     text-decoration: none;
     font-weight: 600;
+}
+
+.register-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #e5e7eb;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.register-footer a {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.register-message {
+    margin-bottom: 15px;
+    padding: 11px 13px;
+    border-radius: 9px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.register-error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.register-success {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+@media (max-width: 600px) {
+    .register-container {
+        padding: 28px 22px;
+    }
 }

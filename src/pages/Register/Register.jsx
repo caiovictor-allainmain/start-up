@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom"
 import Button from "../../components/Button/Button"
 
 import { supabase } from "../../services/supabase"
+import { validateRegister } from "../../utils/validation"
 
 import "./Register.css"
 
@@ -52,43 +53,20 @@ function Register() {
         // VALIDAÇÕES
         // =========================
 
-        const name = formData.name.trim()
-        const username = formData.username.trim()
-        const email = formData.email.trim().toLowerCase()
-        const password = formData.password
-        const confirmPassword = formData.confirmPassword
+        const normalizedForm = {
+            ...formData,
+            name: formData.name.trim(),
+            username: formData.username.trim().replace(/^@/, ""),
+            email: formData.email.trim().toLowerCase()
+        }
+        const validation = validateRegister(normalizedForm)
 
-        if (!name) {
-            setError("Digite seu nome.")
+        if (!validation.valid) {
+            setError(Object.values(validation.errors)[0])
             return
         }
 
-        if (!username) {
-            setError("Digite seu nome de usuário.")
-            return
-        }
-
-        if (!email) {
-            setError("Digite seu e-mail.")
-            return
-        }
-
-        if (!email.includes("@")) {
-            setError("Digite um e-mail válido.")
-            return
-        }
-
-        if (password.length < 6) {
-            setError(
-                "A senha precisa ter pelo menos 6 caracteres."
-            )
-            return
-        }
-
-        if (password !== confirmPassword) {
-            setError("As senhas não coincidem.")
-            return
-        }
+        const { name, username, email, password } = normalizedForm
 
         setLoading(true)
 
@@ -381,4 +359,3 @@ function Register() {
 }
 
 export default Register
-

@@ -15,7 +15,8 @@
 }
 
 .modal {
-    background: white;
+    background: var(--surface, white);
+    color: var(--text, #111827);
 
     border-radius: 16px;
 
@@ -54,7 +55,7 @@
 .modal-header h2 {
     margin: 0;
 
-    color: #111827;
+    color: var(--text, #111827);
 
     font-size: 18px;
 }
@@ -66,9 +67,9 @@
     border: none;
     border-radius: 8px;
 
-    background: #f3f4f6;
+    background: var(--surface-secondary, #f3f4f6);
 
-    color: #374151;
+    color: var(--text, #374151);
 
     font-size: 23px;
 
@@ -76,7 +77,42 @@
 }
 
 .modal-close:hover {
-    background: #e5e7eb;
+    background: var(--border, #e5e7eb);
+}
+
+.modal-header {
+    border-color: var(--border, #e5e7eb);
+}
+
+.help-content {
+    color: var(--text-secondary, #4b5563);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.help-content p {
+    margin: 0 0 12px;
+}
+
+.help-content ul {
+    display: grid;
+    gap: 10px;
+    padding-left: 20px;
+    margin: 0 0 20px;
+}
+
+.help-content strong {
+    color: var(--text, #111827);
+}
+
+.help-settings-button {
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 9px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
 }
 
 .modal-content {

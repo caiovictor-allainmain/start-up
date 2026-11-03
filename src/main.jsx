@@ -5,6 +5,9 @@ import { createRoot } from "react-dom/client"
 import App from "./App"
 
 import "./index.css"
+import { applyTheme, loadSavedSettings } from "./utils/theme"
+
+applyTheme(loadSavedSettings().tema)
 
 const rootElement =
     document.getElementById("root")

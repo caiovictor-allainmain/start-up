@@ -1,6 +1,6 @@
 .post {
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--surface, white);
+    border: 1px solid var(--border, #e5e7eb);
     border-radius: 14px;
 
     padding: 20px;
@@ -39,7 +39,7 @@
 
 .post-author strong {
     font-size: 14px;
-    color: #111827;
+    color: var(--text, #111827);
 }
 
 .post-author span {
@@ -71,8 +71,8 @@
 
     border-radius: 10px;
 
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
+    background: var(--surface-secondary, #f8fafc);
+    border: 1px solid var(--border, #e5e7eb);
 }
 
 .post-startup-icon {
@@ -97,7 +97,7 @@
 .post-content {
     margin-top: 18px;
 
-    color: #374151;
+    color: var(--text, #374151);
 
     font-size: 15px;
     line-height: 1.6;
@@ -113,7 +113,7 @@
     margin-top: 20px;
     padding-top: 14px;
 
-    border-top: 1px solid #f1f5f9;
+    border-top: 1px solid var(--border, #f1f5f9);
 }
 
 .post-actions button {
